@@ -1,0 +1,56 @@
+.navbar {
+  position: relative;
+  min-height: 80px;
+  padding-top: 10px;
+  margin: 0px;
+  background-color: #064968;
+  border-color: #064968;
+  font-family: 'Open Sans', Tahoma
+}
+.navbar-text {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.navbar-default .navbar-text {
+  color: #78BD9C;
+}
+
+.container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+}
+
+#overlay {
+  position: absolute;
+  float: right;
+  top: 100px;
+  left:; 50px;
+  padding-left: 10px;
+  padding-right: 10px;
+  width: 25%;
+  z-index: 99;
+  background-color: #064968;
+  color: white;
+  font-family: 'Open Sans', Tahoma
+}
+
+#city {
+  text-align: center;
+  padding-bottom: 10px;
+}
+
+#results {
+  text-align: left;
+  font-size: 16px;
+}
+
+a {
+  color: white;
+}
+
+a:hover {
+  color: white;
+}
