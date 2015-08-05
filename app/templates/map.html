@@ -1,0 +1,95 @@
+<html>
+<head>
+    <title>News Around the World</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.css" />
+    <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Open+Sans">
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{url_for("static",filename="css/style.css")}}">
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <style>#map { height: 100%; width: 100% }</style>
+</head>
+<body>
+    <nav class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                 <h2 class = "navbar-text">News Around the World</h2>
+            </div>
+          </div>
+        </nav>    
+    
+    <div class="container"> 
+        <div id="map"></div>
+        <div id="overlay">  
+            <h2><div id="city"></div></h2>
+            <div id="results"></div>
+        </div>
+    </div>
+
+    <script>
+        var results = {{dumps|tojson|safe}};
+        var map = L.map('map').setView([0, 0], 3);
+
+        var geojsonMarkerOptions = {
+            radius: 8,
+            fillColor: "#ff7800",
+            color: "#000",
+            weight: 1,
+            opacity: 1,
+            fillOpacity: 0.8
+    };
+
+        var highlightStyle = {
+            radius: 8,
+            fillColor: 'yellow',
+            color: "#000",
+            weight: 1,
+            opacity: 1, 
+            fillOpacity: 0.8
+        };
+
+
+        function showArticles(feature, layer) {
+            layer.on('mouseover', function(e) {
+                layer.setStyle(highlightStyle);
+                $('#results').empty();
+                var x = feature.properties;
+                $('#city').html(x.location);
+                var headlines = Object.keys(x.articles);
+                console.log(headlines)
+                for (var i of headlines) {
+                        $('#results').append('<p><a href='+x.articles[i]+'>'+i+'</p>')
+                    console.log(i)
+                }
+            });
+
+            layer.on('mouseout', function(e) {
+                layer.setStyle(geojsonMarkerOptions);
+            });
+        }
+
+        for (var item of results) {
+            var data = JSON.parse(item);
+            var marker = L.geoJson(data, {
+                pointToLayer: function (feature, latlng) {
+                    return L.circleMarker(latlng, geojsonMarkerOptions)
+                },
+                onEachFeature: showArticles
+                }).addTo(map);
+        }
+
+    L.tileLayer('https://api.tiles.mapbox.com/v4/{id}/{z}/{x}/{y}.png?access_token={accessToken}', {
+    attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://mapbox.com">Mapbox</a>',
+    minZoom: 2,
+    maxZoom: 18,
+    id: 'jqiu25.n3104dl2',
+    accessToken: 'pk.eyJ1IjoianFpdTI1IiwiYSI6IjM2NTkyZDYzYzg4NDczZjE2MjBmOTVlZTNlN2Y4NzdlIn0.H4lBUmVGQbPmskgveoZrfw'
+    }).addTo(map);
+
+    </script>
+</body>
+</html>
